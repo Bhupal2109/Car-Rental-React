@@ -1,100 +1,170 @@
-import React, { useEffect } from 'react'
-import { Facebook, Mail, Lock, Car, Globe } from 'lucide-react';
+import React, { useEffect, useState } from 'react'
+import { Mail, Lock, Car } from 'lucide-react';
 import ScrollReveal from 'scrollreveal';
 import { Link } from 'react-router-dom';
+import heroCar from '../assets/bmw.jpg';
 
 const Login = () => {
-    useEffect(() => {
-        ScrollReveal().reveal(".reveal-x-alt", {
-            origin: "right",
-            distance: "100px",
-            duration: 1500,
-            easing: "ease-in-out",
-            reset: false
-        })
-    }, []);
+  const rememberedEmail = localStorage.getItem('rememberedEmail') || '';
+  const [formData, setFormData] = useState({
+    email: rememberedEmail,
+    password: '',
+  });
+  const [rememberMe, setRememberMe] = useState(Boolean(rememberedEmail));
+  const [errors, setErrors] = useState({});
+  const [submitMessage, setSubmitMessage] = useState('');
 
+  useEffect(() => {
+    ScrollReveal().reveal(".reveal-x-alt", {
+      origin: "right",
+      distance: "100px",
+      duration: 1500,
+      easing: "ease-in-out",
+      reset: false
+    })
+  }, []);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: '' }));
+    setSubmitMessage('');
+  };
+
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const nextErrors = {};
+
+    if (!formData.email.trim()) {
+      nextErrors.email = 'Email is required.';
+    } else if (!validateEmail(formData.email)) {
+      nextErrors.email = 'Please enter a valid email address.';
+    }
+
+    if (!formData.password.trim()) {
+      nextErrors.password = 'Password is required.';
+    }
+
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    if (rememberMe) {
+      localStorage.setItem('rememberedEmail', formData.email.trim());
+    } else {
+      localStorage.removeItem('rememberedEmail');
+    }
+
+    setSubmitMessage('Your sign-in details are valid. Authentication is not connected yet.');
+    console.log('Login form submitted:', formData);
+  };
 
   return (
-    <div className="py-14 flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-blue-700 px-4">
-        {/* Logo */}
-        <div className="text-center mb-6">
-          <div className="text-white text-3xl font-bold flex justify-center items-center gap-2">
-           <Car className='w-10 h-10' /> <span>AutoRent</span>
+    <main className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto grid w-full max-w-6xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg md:min-h-[660px] md:grid-cols-[0.9fr_1.1fr]">
+        <section className="relative isolate flex min-h-[280px] flex-col justify-between overflow-hidden bg-slate-950 px-6 py-7 text-white sm:min-h-[320px] sm:px-9 sm:py-9 md:min-h-[660px] md:px-8 lg:px-12">
+          <img src={heroCar} alt="Premium BMW SUV" className="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-br from-blue-950/85 via-slate-950/65 to-slate-950/75" />
+
+          <Link to="/" className="relative inline-flex w-fit items-center gap-2.5 text-white">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
+              <Car className="h-6 w-6" />
+            </span>
+            <span className="text-2xl font-bold">AutoRent</span>
+          </Link>
+
+          <div className="relative mt-12 md:mt-0 md:pb-2">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-blue-200">Premium Car Rentals</p>
+            <h2 className="max-w-sm text-3xl font-bold leading-tight sm:text-4xl">Your journey starts here.</h2>
+            <p className="mt-4 max-w-sm text-sm leading-6 text-white/85 sm:text-base">
+              Premium cars, simple booking, and a better way to travel.
+            </p>
           </div>
-        </div>
-      <div className="w-full max-w-md bg-gray-100 rounded-lg shadow-lg p-8 pt-5 reveal-x-alt">
+        </section>
 
-        {/* Heading */}
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">Welcome Back</h2>
-        <p className="text-center text-gray-500 mb-6">Sign in to your account</p>
-
-        {/* Form */}
-        <form>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+        <section className="flex items-center justify-center px-6 py-10 sm:px-10 md:px-8 lg:px-12 xl:px-16">
+          <div className="w-full max-w-md reveal-x-alt">
+            <div className="mb-8">
+              <p className="text-sm font-semibold text-blue-600">Welcome back to AutoRent</p>
+              <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">Welcome Back</h1>
+              <p className="mt-2 text-sm text-slate-600">Sign in to continue your journey.</p>
             </div>
+
+            <form onSubmit={handleSubmit} noValidate className="space-y-5">
+              <div>
+                <label htmlFor="login-email" className="mb-2 block text-sm font-medium text-slate-700">Email Address</label>
+                <div className="relative">
+                  <Mail className="absolute left-3.5 top-3.5 h-5 w-5 text-slate-400" />
+                  <input
+                    id="login-email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    className="h-12 w-full rounded-lg border border-slate-300 bg-white pl-11 pr-4 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="login-password" className="mb-2 block text-sm font-medium text-slate-700">Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3.5 top-3.5 h-5 w-5 text-slate-400" />
+                  <input
+                    id="login-password"
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Enter your password"
+                    className="h-12 w-full rounded-lg border border-slate-300 bg-white pl-11 pr-4 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+                {errors.password && <p className="mt-2 text-sm text-red-600">{errors.password}</p>}
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
+                <label className="inline-flex cursor-pointer items-center gap-2 text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(event) => setRememberMe(event.target.checked)}
+                    className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-blue-600 focus:ring-2 focus:ring-blue-400"
+                  />
+                  <span>Remember me</span>
+                </label>
+                <Link to="/forgot-password" className="font-medium text-blue-600 hover:text-blue-700 hover:underline">Forgot password?</Link>
+              </div>
+
+              {submitMessage && (
+                <p role="status" className="rounded-lg border border-green-200 bg-green-50 px-3 py-2.5 text-sm text-green-800">
+                  {submitMessage}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="h-12 w-full cursor-pointer rounded-lg bg-blue-600 px-4 font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Sign In
+              </button>
+            </form>
+
+            <p className="mt-7 text-center text-sm text-slate-600">
+              Don&apos;t have an account?{' '}
+              <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700 hover:underline">Sign Up</Link>
+            </p>
           </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-              <input
-                type="password"
-                placeholder="Enter your password"
-                className="w-full pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          <div className="flex sm:flex-row flex-col sm:items-center sm:gap-0 gap-2 justify-between text-sm mb-6">
-            <label className="flex items-center gap-1 cursor-pointer">
-              <input type="checkbox" className="cursor-pointer appearance-none h-4 w-4 border border-gray-300 rounded-sm checked:bg-blue-500 checked:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-400" />
-              <span className='text-base'>Remember me</span>
-            </label>
-            <a href="#" className="text-blue-500 hover:underline">Forgot password?</a>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full cursor-pointer bg-blue-500 hover:bg-blue-700 text-white py-2 rounded-md font-medium transition duration-200"
-          >
-            Sign In
-          </button>
-        </form>
-
-        {/* Divider */}
-        <div className="flex items-center justify-between gap-6 my-6">
-          <span className="border-t border-gray-300 w-full"></span>
-          <span className="text-sm text-gray-400 w-full">Or continue with</span>
-          <span className="border-t border-gray-300 w-full"></span>
-        </div>
-
-        {/* Social Login */}
-        <div className="flex gap-4">
-          <button className="w-1/2 flex cursor-pointer items-center justify-center border border-gray-300 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300">
-            <Globe className="mr-2" /> Google
-          </button>
-          <button className="w-1/2 flex cursor-pointer items-center justify-center border border-gray-300 py-2 rounded-md hover:bg-blue-700 hover:text-white transition duration-300">
-            <Facebook className="mr-2" /> Facebook
-          </button>
-        </div>
-
-        {/* Sign up link */}
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-500 hover:underline">Sign up</Link>
-        </p>
+        </section>
       </div>
-    </div>
+    </main>
   )
 }
 

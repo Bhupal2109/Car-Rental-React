@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import videoImg from "../assets/video-img.jpg"
 import { Play, X } from 'lucide-react';
+
+const CAR_RENTAL_VIDEO_URL = 'https://assets.mixkit.co/videos/35540/35540-720.mp4';
 
 const VideoSection = () => {
     const [showVideo, setShowVideo] = useState(false);
@@ -28,23 +30,26 @@ const VideoSection = () => {
 
         {/* Video Modal */}
         {showVideo && (
-          <div className="fixed inset-0 bg-black bg-opacity-10 z-50 flex items-center justify-center px-4">
+          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center px-4">
             <div className="relative w-full max-w-3xl">
               <button
+                type="button"
                 onClick={() => setShowVideo(false)}
+                aria-label="Close video"
                 className="absolute top-2 right-2 text-white text-2xl hover:text-red-500"
               >
                 <X className='cursor-pointer' />
               </button>
-              <div className="aspect-w-16 aspect-h-9 h-[400px] w-full">
-                <iframe
-                  src="https://www.youtube.com/embed/tgbNymZ7vqY"
-                  title="Demo Video"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="rounded-lg w-full h-full"
-                ></iframe>
+              <div className="w-full">
+                <video
+                  src={CAR_RENTAL_VIDEO_URL}
+                  title="Electric car city drive"
+                  controls
+                  autoPlay
+                  playsInline
+                  preload="metadata"
+                  className="aspect-video w-full rounded-lg bg-black object-contain"
+                />
               </div>
             </div>
           </div>

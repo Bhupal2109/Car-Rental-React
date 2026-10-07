@@ -1,11 +1,10 @@
-import React from 'react'
 import { Link } from 'react-router-dom';
 import { Car, Facebook, Twitter, Instagram, Phone, Mail, MapPin  } from 'lucide-react';
 
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300 py-16 px-4 sm:px-6 lg:px-20">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Company Info */}
         <div>
           <Link to='/' className="flex items-center space-x-2">
@@ -16,9 +15,33 @@ const Footer = () => {
             Your trusted partner for premium car rentals. Experience the freedom of the road with our quality vehicles and exceptional service.
           </p>
           <div className="flex gap-4 mt-2">
-            <Facebook className="hover:text-white cursor-pointer" />
-            <Twitter className="hover:text-white cursor-pointer" />
-            <Instagram className="hover:text-white cursor-pointer" />
+            <a
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit AutoRent on Facebook"
+              className="inline-flex"
+            >
+              <Facebook className="hover:text-white cursor-pointer" />
+            </a>
+            <a
+              href="https://x.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit AutoRent on X"
+              className="inline-flex"
+            >
+              <Twitter className="hover:text-white cursor-pointer" />
+            </a>
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit AutoRent on Instagram"
+              className="inline-flex"
+            >
+              <Instagram className="hover:text-white cursor-pointer" />
+            </a>
           </div>
         </div>
 
@@ -26,8 +49,8 @@ const Footer = () => {
         <div>
           <h4 className="text-white font-semibold mb-4">Quick Links</h4>
           <ul className="space-y-2">
-            <li><a href="#" className="hover:underline">Home</a></li>
-            <li><a href="#" className="hover:underline">Our Cars</a></li>
+            <li><Link to="/" className="hover:underline">Home</Link></li>
+            <li><Link to="/cars" className="hover:underline">Our Cars</Link></li>
             <li><a href="#" className="hover:underline">About Us</a></li>
             <li><a href="#" className="hover:underline">Contact</a></li>
             <li><a href="#" className="hover:underline">Terms & Conditions</a></li>
